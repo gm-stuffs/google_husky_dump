@@ -1,0 +1,14 @@
+# husky-user 14 UD1A.230803.041 10808477 release-keys
+- manufacturer: google
+- platform: zuma
+- codename: husky
+- flavor: husky-user
+- release: 14
+- id: UD1A.230803.041
+- incremental: 10808477
+- tags: release-keys
+- fingerprint: google/husky/husky:14/UD1A.230803.041/10808477:user/release-keys
+- is_ab: true
+- brand: google
+- branch: husky-user-14-UD1A.230803.041-10808477-release-keys
+- repo: google_husky_dump
