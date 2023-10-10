@@ -1,0 +1,60 @@
+{
+	"pipelines": [
+		{
+			"name": "default",
+			"device": "/dev/touch_offload",
+			"algorithms": [
+				{
+					"class": "SegmentationAlgorithm",
+					"name": "segmentation",
+				},
+				{
+					"class": "PeakTrackerAlgorithm",
+					"name": "peak_tracker",
+					"blocked_by": ["segmentation"],
+					"parameters": {
+					},
+				},
+				{
+					"class": "GripSuppressionAlgorithm",
+					"name": "grip_suppression",
+					"blocked_by": ["peak_tracker"],
+					"parameters": {
+					}
+				},
+				{
+					"class": "EarCheekDetectionAlgorithm",
+					"name": "earcheek",
+					"blocked_by": ["grip_suppression"],
+				},
+				{
+					"class": "TouchflowAlgorithm",
+					"name": "touchflow",
+					"parameters": { "requires_self_data": true },
+					"blocked_by": ["earcheek"],
+				},
+				{
+					"class": "ReportingAlgorithm",
+					"name": "reporting",
+					"blocked_by": ["touchflow"],
+				},
+				{
+					"class": "HardwareStateDetector",
+					"name": "gril_antenna_tuning",
+					"blocked_by": ["reporting"],
+					"parameters": {
+						"enableGril": true,
+						"minNumFramesCaseDetection": 20000,
+						"scalingFactorSignalStrength": 0.91,
+						"debounceDelayCaseAbsentToPresentMs": 14400000,
+					}
+				},
+				{
+					"class": "TouchSuezAlgorithm",
+					"name": "touchsuez",
+					"blocked_by": ["gril_antenna_tuning"],
+				}
+			],
+		}
+	]
+}
