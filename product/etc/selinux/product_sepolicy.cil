@@ -1,0 +1,4 @@
+(allow radio uce_service (service_manager (add find)))
+(neverallow base_typeattr_542 uce_service (service_manager (add)))
+(dontaudit vendor_init device_config_configuration_prop (property_service (set)))
+
