@@ -1,0 +1,14 @@
+# husky-user 14 UQ1A.240105.004.A1 11206926 release-keys
+- manufacturer: google
+- platform: zuma
+- codename: husky
+- flavor: husky-user
+- release: 14
+- id: UQ1A.240105.004.A1
+- incremental: 11206926
+- tags: release-keys
+- fingerprint: google/husky/husky:14/UQ1A.240105.004.A1/11206926:user/release-keys
+- is_ab: true
+- brand: google
+- branch: husky-user-14-UQ1A.240105.004.A1-11206926-release-keys
+- repo: google_husky_dump
