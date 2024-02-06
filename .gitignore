@@ -1,0 +1,10 @@
+product/app/PrebuiltGmail/PrebuiltGmail.apk
+product/app/YouTube/YouTube.apk
+product/app/Photos/Photos.apk
+product/priv-app/Velvet/Velvet.apk
+product/priv-app/DevicePersonalizationPrebuiltPixel2023/DevicePersonalizationPrebuiltPixel2023.apk
+product/priv-app/GoogleCamera/GoogleCamera.apk
+product/priv-app/PrebuiltGmsCore/PrebuiltGmsCoreSc.apk
+product/priv-app/PrebuiltBugle/PrebuiltBugle.apk
+modem.img
+vendor/apex/com.google.pixel.camera.hal.apex
