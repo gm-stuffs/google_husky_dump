@@ -1,0 +1,200 @@
+#
+# Husky sensor device configuration registry script for the DVT stage.
+#
+# Source of truth: go/pixel-sensor-list
+#
+
+#
+# CDT Filter <CDT>:<mask>
+# CDT format: <0xPPPPSJIV> (P:Product, S:Stage, J:Major, I:Minor, V:Variant)
+# go/pixel-cdt-zuma
+#
+
+?+0x20000:0xFFFF0000
+# Exclude
+?-0x22000:0xFFFFF000  # Proto
+?-0x23000:0xFFFFF000  # EVT
+
+#
+# Record reg_script.
+#
+
++/
+reg_script=husky_dvt.reg
+
+#
+# Sensors
+#
+
+# MAG 0 (MMC5633NJ)
++/dev/mmc56x3x/0/mag
+  fac_cal_transform=1.0386 0.0212 -0.0440 0.0018 0.9928 -0.0377 -0.0925 -0.0125 1.0405 0 0 0
+
+# MAG 1 (MMC5633NJ)
++/dev/mmc56x3x/1/mag
+  fac_cal_transform=0.9560 0.0450 0.0212 0.0565 0.9626 -0.0234 0.0206 0.0020 1.0850 0 0 0
+
+# ALSP (TMD37193)
++/dev/tmd3719/0
+  bus_name=i2c0
+  bus_freq_hz=400000
+  bus_addr=0x39
+  intr_id=45
+  sync_delay_ns=338136
+  # For display NS mode.
+  sync_delay_2_ns=828143
+  # falling edge = 0, rising edge = 1
+  te2_alignment=1
+  anti_aliasing=1
+  debug_enable=1
+
++/dev/tmd3719/0/als
+  lux_scale=4.488642
+  c_coef=1
+  r_coef=-0.765091
+  g_coef=0.986515
+  b_coef=-1.221424
+  itime_table_brightness=624 855 1063 1550 3307 4096
+  itime_table=1600000 1600000 1200000 200000 200000 1600000
+  max_gain_table=11 10 10 9 8 8
+  # int{<hard_stop> <C_boost> <R_boost> <G_boost> <B_boost>}
+  # max_gain[color] = MIN(hard_stop, max_gain_table[brightness] +
+  #                                  max_gain_chan_boost[color])
+  max_gain_chan_boost=11 0 1 1 2
+  fast_filter_size=10
+  slow_filter_size=100
+  aod_fast_filter_size=2
+  aod_slow_filter_size=2
+  max_lux=250000
+  high_IR_threshold=1.5
+  # Number of EM cycles in a 60Hz frame.
+  EM_cycle_count_60Hz=4
+  # Step-size (in EM slots) for each rotation.
+  rotation_step_size=1
+  new_gain_ratio=1
+
+  clear_gain11_ratio=0.112454043815857
+  red_gain11_ratio=0.111048021355829
+  green_gain11_ratio=0.110130416835213
+  blue_gain11_ratio=0.111121334215689
+
+  clear_gain10_ratio=0.239671782885746
+  red_gain10_ratio=0.238467073442303
+  green_gain10_ratio=0.237599908234773
+  blue_gain10_ratio=0.238519151575129
+
+  clear_gain9_ratio=0.493194253562113
+  red_gain9_ratio=0.49237577488601
+  green_gain9_ratio=0.491816334907285
+  blue_gain9_ratio=0.492338627586782
+
+  clear_gain7_ratio=2.01192204106987
+  red_gain7_ratio=2.0144040858996
+  green_gain7_ratio=2.01530710821323
+  blue_gain7_ratio=2.0141120183188
+
+  clear_gain6_ratio=4.03185775961208
+  red_gain6_ratio=4.04075479687336
+  green_gain6_ratio=4.0429883978271
+  blue_gain6_ratio=4.03971141006614
+
+  # Histogram Configuration.
+  # Disable until ready.
+  histo_enable=1
+  # Display coordinates go from top left to bottom right.
+  histo_roi_left=335
+  histo_roi_top=120
+  histo_roi_right=465
+  histo_roi_bottom=270
+  # Weights applied to the RBG color samples to calculate luma.
+  # luma values:
+  # luma = W_R * R + W_G * G + WB * B
+  # with W_R + W_G + W_B = 1024
+  histo_weight_r=186
+  histo_weight_g=766
+  histo_weight_b=72
+  #
+  # Leakage calculator configuration. The general format is:
+  #   leakage = luma_term(luma, dbv) * dbv_term(dbv)
+  # The luma_term maps luma into a value and different equations may be used
+  # depending on the current DBV value.
+  # Similar, the dbv_term maps DBV into a value and may also use different
+  # equations.
+  # Each line represents one equation, and is of the format:
+  #   start-dbv end-dbv equation-type {coefficients}
+  # This means the equation applies to the DBV range [start-dbv .. end-dbv].
+  # There are two equation types currently:
+  #    0: Polynominal: c0 + c1*L + c2*L^2 + .. + ci*L^i
+  #    1: Natural Log: c0 + c1*ln(L + c2)
+  histo_luma_eq0=0 195 0 0e0
+  histo_luma_eq1=196 4096 0 0e0 -3.35028570E-04 1.59076259E-05 3.07808665E-09
+  histo_dbv_eq0=0 195 0 0e0
+  histo_dbv_eq1=196 3307 0 6.49864720E-01 -1.87875149E-03 3.02794992E-06 -5.34464688E-10
+  histo_dbv_eq2=3308 4096 0 -3.0861E-02 2.22142E-01
+
+
+  # The maximum brightness (DBV) value up to which histogram is active.
+  # This value should match one of the itime_table_brightness values.
+  histo_max_brightness=4096
+  # Minimum change needed for a leakage value to be reported, i.e.,
+  # min_change = MAX(min_change_value, current_leakage_val * min_change_rate)
+  histo_min_change_value=0.01
+  histo_min_change_rate=0.01
+  # Histogram polling interval in ms.
+  histo_polling_interval=50
+  # Fallback luma value to use when histogram returns error (e.g., due to DRM).
+  histo_fallback_luma=128.0
+
++/dev/tmd3719/0/prox
+  auto_baseline=1
+  burst_delay_30hz=200
+  burst_delay_60hz=160
+  burst_delay_120hz=105
+  burst_delay_aod=0
+  # For display NS mode.
+  burst_delay_60hz_2=160
+  burst_delay_30hz_2=200
+  hxtalk=1
+  pulse_count=1
+  vcsel_ma=10
+  pd0_far_threshold=30
+  pd0_near_threshold=50
+  pd1_far_threshold=50
+  pd1_near_threshold=90
+  min_fps=30
+  # "Low power" operating parameters.
+  pulse_len_us=512
+  filter_len=4
+  skip_count=0
+  pdata0_scale=1.264
+  pdata1_scale=1
+  gain0=4
+  gain1=8
+  # "High power" operating parameters.
+  hp_pulse_len_us=512
+  hp_filter_len=1
+  hp_skip_count=0
+  hp_pdata0_scale=1.264
+  hp_pdata1_scale=1
+  hp_pdata0_offset=0
+  hp_pdata1_offset=0
+  hp_gain0=4
+  hp_gain1=8
+  # High power only if value > 0.
+  high_power_mode_only=1
+
+  max_lux_valid_for_baselining=0.0
+  max_ir_valid_for_baselining=0.8
+
++/dev/vd6282/0/spectral
+  # Golden values for calibration.
+  golden_rals_r=990
+  golden_rals_g=1099
+  golden_rals_b=276
+  golden_rals_clr1=4851
+  golden_rals_ir=2736
+  golden_rals_clr2=4882
+
++/dev/vd6282/0/rls
+  fix_fac_cal=1
+  lux_scale=112.93673
