@@ -1,0 +1,14 @@
+# husky-user 14 AP2A.240705.005 11942872 release-keys
+- manufacturer: google
+- platform: zuma
+- codename: husky
+- flavor: husky-user
+- release: 14
+- id: AP2A.240705.005
+- incremental: 11942872
+- tags: release-keys
+- fingerprint: google/husky/husky:14/AP2A.240705.005/11942872:user/release-keys
+- is_ab: true
+- brand: google
+- branch: husky-user-14-AP2A.240705.005-11942872-release-keys
+- repo: google_husky_dump
