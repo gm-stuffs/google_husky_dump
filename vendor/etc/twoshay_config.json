@@ -1,0 +1,75 @@
+{
+	"pipelines": [
+		{
+			"name": "default",
+			"device": "/dev/touch_offload",
+			"algorithms": [
+				{
+					"class": "SegmentationAlgorithm",
+					"name": "segmentation",
+				},
+				{
+					"class": "PeakTrackerAlgorithm",
+					"name": "peak_tracker",
+					"blocked_by": ["segmentation"],
+					"parameters": {
+					},
+				},
+				{
+					"class": "GripSuppressionAlgorithm",
+					"name": "grip_suppression",
+					"blocked_by": ["peak_tracker"],
+					"parameters": {
+					}
+				},
+				{
+					"class": "EarCheekDetectionAlgorithm",
+					"name": "earcheek",
+					"blocked_by": ["grip_suppression"],
+				},
+				{
+					"class": "SegmentationAdjustmentAlgorithm",
+					"name": "segmentadjust",
+					"blocked_by": ["earcheek"],
+					"parameters": {
+						"enable_segmentation_adjustment": true,
+						"enable_debug": false,
+						"threshold": 0.15,
+					}
+				},
+				{
+					"class": "TouchflowAlgorithm",
+					"name": "touchflow",
+					"parameters": { "requires_self_data": true },
+					"blocked_by": ["segmentadjust"],
+				},
+				{
+					"class": "ReportingAlgorithm",
+					"name": "reporting",
+					"blocked_by": ["touchflow"],
+				},
+				{
+					"class": "HardwareStateDetector",
+					"name": "gril_antenna_tuning",
+					"blocked_by": ["reporting"],
+					"parameters": {
+						"enableGril": true,
+						"minNumFramesCaseDetection": 20000,
+						"scalingFactorSignalStrength": 0.91,
+						"debounceDelayCaseAbsentToPresentMs": 0,
+					}
+				},
+				{
+					"class": "TouchSuezAlgorithm",
+					"name": "touchsuez",
+					"blocked_by": ["gril_antenna_tuning"],
+				},
+				{
+					"class": "SensorFusionAlgorithm",
+					"name": "sensorfusion",
+					"blocked_by": ["touchsuez"],
+				}
+			],
+		}
+	]
+}
