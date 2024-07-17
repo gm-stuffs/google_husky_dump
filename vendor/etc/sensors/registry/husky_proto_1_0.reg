@@ -1,0 +1,149 @@
+#
+# Husky sensor device configuration registry script for the Proto 1.0 stage and before.
+#
+# Source of truth: go/pixel-sensor-list
+#
+
+#
+# CDT Filter <CDT>:<mask>
+# CDT format: <0xPPPPSJIV> (P:Product, S:Stage, J:Major, I:Minor, V:Variant)
+# go/pixel-cdt-zuma
+#
+
+?+0x22000 0x22100 0x22101
+
+#
+# Record reg_script.
+#
+
++/
+reg_script=husky_proto_1_0.reg
+
+#
+# Sensors
+#
+
+# MAG 0 (MMC5633NJ)
++/dev/mmc56x3x/0/mag
+  fac_cal_transform=1.0384 0.0330 -0.0505 0.0225 1.0107 -0.0670 -0.1036 0.0287 1.0372 0 0 0
+
+# MAG 1 (MMC5633NJ)
++/dev/mmc56x3x/1/mag
+  fac_cal_transform=0.9803 0.0729 0.0236 0.0779 0.9627 -0.0525 0.0326 0.0297 1.0834 0 0 0
+
+# ALSP (TMD37193)
++/dev/tmd3719/0
+  bus_name=i2c0
+  bus_freq_hz=400000
+  bus_addr=0x39
+  intr_id=45
+  sync_delay_ns=4434851
+  # falling edge = 0, rising edge = 1
+  te2_alignment=1
+  anti_aliasing=1
+  debug_enable=1
+
++/dev/tmd3719/0/als
+  lux_scale=4.306021
+  c_coef=1
+  r_coef=-0.765091
+  g_coef=0.986515
+  b_coef=-1.221424
+  itime_table_brightness=64 128 204 281 2048
+  itime_table=2800000 2000000 1000000 181750 181750
+  max_gain_table=11 10 10 9 8
+  # int{<hard_stop> <C_boost> <R_boost> <G_boost> <B_boost>}
+  # max_gain[color] = MIN(hard_stop, max_gain_table[brightness] +
+  #                                  max_gain_chan_boost[color])
+  max_gain_chan_boost=11 0 1 1 2
+  fast_filter_size=10
+  slow_filter_size=100
+  aod_fast_filter_size=2
+  aod_slow_filter_size=2
+  max_lux=250000
+  high_IR_threshold=1.5
+  # Number of EM cycles in a 60Hz frame.
+  EM_cycle_count_60Hz=4
+  # Step-size (in EM slots) for each rotation.
+  rotation_step_size=1
+  new_gain_ratio=1
+
+  clear_gain11_ratio=0.11587520907570359
+  red_gain11_ratio=0.11367177612973169
+  green_gain11_ratio=0.11373533389507672
+  blue_gain11_ratio=0.11379697951097906
+
+  clear_gain10_ratio=0.24229450044714415
+  red_gain10_ratio=0.240732949197022
+  green_gain10_ratio=0.24076550697884685
+  blue_gain10_ratio=0.2409091628046755
+
+  clear_gain9_ratio=0.49489623124483123
+  red_gain9_ratio=0.4938930981658593
+  green_gain9_ratio=0.49389121338912134
+  blue_gain9_ratio=0.4939696854457543
+
+  clear_gain7_ratio=2.008293329203875
+  red_gain7_ratio=2.011111780293905
+  green_gain7_ratio=2.011080171713656
+  blue_gain7_ratio=2.010957792207792
+
+  clear_gain6_ratio=4.02128991859737
+  red_gain6_ratio=4.031043403276803
+  green_gain6_ratio=4.030728996404054
+  blue_gain6_ratio=4.030616224648987
+
+  # Histogram Configuration.
+  # Disable until ready.
+  histo_enable=0
+
++/dev/tmd3719/0/prox
+  auto_baseline=1
+  burst_delay_30hz=200
+  burst_delay_60hz=160
+  burst_delay_120hz=105
+  burst_delay_aod=0
+  hxtalk=1
+  pulse_count=1
+  vcsel_ma=10
+  pd0_far_threshold=100
+  pd0_near_threshold=100
+  pd1_far_threshold=140
+  pd1_near_threshold=200
+  min_fps=30
+  # "Low power" operating parameters.
+  pulse_len_us=512
+  filter_len=4
+  skip_count=0
+  pdata0_scale=1.2
+  pdata1_scale=1
+  gain0=4
+  gain1=8
+  # "High power" operating parameters.
+  hp_pulse_len_us=512
+  hp_filter_len=1
+  hp_skip_count=0
+  hp_pdata0_scale=1.2
+  hp_pdata1_scale=1
+  hp_pdata0_offset=0
+  hp_pdata1_offset=0
+  hp_gain0=4
+  hp_gain1=8
+  # High power only if value > 0.
+  high_power_mode_only=1
+
+  max_lux_valid_for_baselining=0.0
+  max_ir_valid_for_baselining=0.8
+
++/dev/vd6282/0/spectral
+  # Golden values for calibration.
+  golden_rals_r=934
+  golden_rals_g=1049
+  golden_rals_b=252
+  golden_rals_clr1=4554
+  golden_rals_ir=2860
+  golden_rals_clr2=4552
+
++/dev/vd6282/0/rls
+  fix_fac_cal=1
+  lux_scale=117.92146
