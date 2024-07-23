@@ -1,0 +1,14 @@
+# husky_beta-user 15 AP31.240617.009 12094726 release-keys
+- manufacturer: google
+- platform: zuma
+- codename: husky
+- flavor: husky_beta-user
+- release: 15
+- id: AP31.240617.009
+- incremental: 12094726
+- tags: release-keys
+- fingerprint: google/husky_beta/husky:15/AP31.240617.009/12094726:user/release-keys
+- is_ab: true
+- brand: google
+- branch: husky_beta-user-15-AP31.240617.009-12094726-release-keys
+- repo: google_husky_dump
